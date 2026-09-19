@@ -1,0 +1,44 @@
+p {
+    font-family: 'Arial', sans-serif;
+    color: grey;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    color: royalblue;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+#banner {
+    background-color: lightblue;
+    text-align: center;
+    height: 300px;
+    width: 100%;
+}
+
+#nav {
+    background-color: lightgrey;
+    width: 100px;
+}
+
+#content {
+    background-color: lightgrey;
+    width: 700px;
+}
+
+#supporting {
+    background-color: rgb(209, 172, 211);
+    width: 150px;
+    float: left;
+}
+
+#footer {
+    background-color: lightgrey;
+    text-align: center;
+    height: 100px;
+    width: 100%;
+    clear: both;
+}
