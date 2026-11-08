@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Jump Webpage</title>
+    
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* 基礎設定，清除預設邊距 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: auto; /* 確保預設捲動行為不是平滑捲動，以利 instant 跳轉 */
+        }
+
+        /* 區塊共用樣式：Flexbox 置中、字體放大且設為白色 */
+        .section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+            width: 100%;
+        }
+        /* 個別區塊高度與背景顏色 */
+        #div1 {
+            height: 100vh;
+            background-color: #FF6B6B; /* 暖紅色 */
+        }
+        #div2 {
+            height: 100vh;
+            background-color: #4ECDC4; /* 藍綠色 */
+        }
+        #div3 {
+            height: 200vh; /* 第 3 區塊為 200vh */
+            background-color: #45B7D1; /* 天藍色 */
+        }
+        #div4 {
+            height: 100vh;
+            background-color: #F9A826; /* 橘黃色 */
+        }
+        #div5 {
+            height: 100vh;
+            background-color: #9B59B6; /* 紫色 */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="div1" class="section">Division 1</div>
+    <div id="div2" class="section">Division 2</div>
+    <div id="div3" class="section">Division 3</div>
+    <div id="div4" class="section">Division 4</div>
+    <div id="div5" class="section">Division 5</div>
+    <script>
+        $(document).ready(function() {
+            // 2. 加入一個 isLocked 變數
+            let isLocked = false;
+
+            // 3. 透過 window.addEventListener 監聽滾輪事件，設定 passive: false 以允許 preventDefault
+            window.addEventListener('wheel', function(e) {
+                // 4. 如果 isLocked 為 true，則直接 e.preventDefault() 並 return
+                if (isLocked) {
+                    e.preventDefault();
+                    return;
+                }
+
+                // 取得當前的捲動位置與區塊位置 (加入一點點緩衝容錯，避免小數點像素誤差)
+                const scrollTop = $(window).scrollTop();
+                const div4Top = $('#div4').offset().top;
+                const div5Top = $('#div5').offset().top;
+
+                // 5. 判斷視窗捲動位置是否在第 4 區塊的範圍內
+                // 使用 -1 是為了容忍高解析度螢幕可能產生的亞像素 (sub-pixel) 捲動誤差
+                if (scrollTop >= div4Top - 1 && scrollTop < div5Top - 1) {
+                    
+                    // 偵測到向下捲動 (deltaY > 0)
+                    if (e.deltaY > 0) {
+                        // 立即攔截預設捲動行為
+                        e.preventDefault();
+                        
+                        // 將視窗強制瞬間跳轉定位至第 5 區塊
+                        window.scrollTo({
+                            top: div5Top,
+                            behavior: 'instant' 
+                        });
+
+                        // 6. 跳轉後將 isLocked 設為 true，進入冷卻時間
+                        isLocked = true;
+
+                        // 透過 setTimeout 在 600 毫秒後解除鎖定
+                        setTimeout(() => {
+                            isLocked = false;
+                        }, 600);
+                    }
+                }
+                // 若不在第 4 區塊範圍內，或不是向下捲動，則不介入，維持原生捲動 (規則 1)
+                
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
