@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 Divisions Scroll</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .division {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        #div1 { background-color: #3498db; height: 100vh; }
+        #div2 { background-color: #e74c3c; height: 100vh; }
+        /* 第 3 個區塊調整為 200vh */
+        #div3 { background-color: #2ecc71; height: 200vh; } 
+        #div4 { background-color: #f39c12; height: 100vh; }
+        #div5 { background-color: #9b59b6; height: 100vh; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div id="div1" class="division">Division 1</div>
+    <div id="div2" class="division">Division 2</div>
+    <div id="div3" class="division">Division 3</div>
+    <div id="div4" class="division">Division 4</div>
+    <div id="div5" class="division">Division 5</div>
+
+    <script>
+        $(document).ready(function() {
+            let isAnimating = false;
+
+            window.addEventListener('wheel', function(e) {
+                if (isAnimating) {
+                    e.preventDefault();
+                    return;
+                }
+
+                let scrollTop = $(window).scrollTop();
+                let div4Top = $('#div4').offset().top;
+                let div5Top = $('#div5').offset().top;
+
+                // 偵測向下捲動
+                if (e.deltaY > 0) {
+                    // 只有當進入 Division 4 時，才攔截預設捲動並瞬間跳轉至 Division 5
+                    if (scrollTop >= div4Top - 10 && scrollTop < div5Top - 10) {
+                        e.preventDefault();
+                        isAnimating = true;
+                        $(window).scrollTop(div5Top); // 0秒瞬間跳轉
+                        
+                        setTimeout(function() {
+                            isAnimating = false;
+                        }, 600); // 冷卻時間
+                    }
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
